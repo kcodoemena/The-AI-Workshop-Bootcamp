@@ -1,118 +1,116 @@
 -- =============================================================
--- Week 8: SQL Joins  -  EXERCISES
--- The AI Workshop Bootcamp  |  9 May 2026
+-- WEEK 10 - DATA PROFILING EXERCISES
+-- 7 exercises. Numbers 1-4 in class, 5-7 as homework.
+-- Database: BootcampDB (T-SQL)
 -- =============================================================
--- Try each exercise yourself first. Use AI as a partner, not as a
--- shortcut. Compare your answer to 03-solutions.sql at the end.
---
--- Tables (recap):
---   Patients     (PatientID, NHSNumber, FirstName, LastName, ...)
---   Wards        (WardID, WardName, WardType, Capacity, Site)
---   Admissions   (AdmissionID, PatientID, WardID, AdmissionDate,
---                 DischargeDate, AdmissionType, Diagnosis, ...)
---   Observations (ObservationID, AdmissionID, ObsDateTime,
---                 ObsType, ObsValue, RecordedBy)
+-- Try writing each query yourself first. If stuck for more than
+-- two minutes, ask AI - but verify the output before trusting it.
 -- =============================================================
 
 USE BootcampDB;
 GO
 
 
--- -------------------------------------------------------------
--- EXERCISE 1   (warm-up, INNER JOIN)
--- -------------------------------------------------------------
--- Return one row per admission with these columns:
---   PatientFullName, AdmissionDate, Diagnosis, AdmissionType
--- Order by AdmissionDate ascending.
+-- =============================================================
+-- EXERCISE 1 - SHAPE WARM-UP
+-- Goal: Produce a single result set with the row count for every
+-- table in BootcampDB, sorted by row count descending.
+-- Hint: UNION ALL with literal strings for the table name.
+-- =============================================================
 
 -- Your query here:
 
 
 
 
--- -------------------------------------------------------------
--- EXERCISE 2   (LEFT JOIN, finding the gaps)
--- -------------------------------------------------------------
--- List EVERY ward and the number of admissions it has had.
--- Wards with zero admissions must still appear (with count = 0).
--- Order by AdmissionCount descending.
+-- =============================================================
+-- EXERCISE 2 - NULL PROFILE
+-- Goal: For the Patients table, produce a single-row result that
+-- shows the total row count and the number of NULLs in EACH column
+-- of the table (other than PatientID and CreatedDate).
+-- Hint: SUM(CASE WHEN col IS NULL THEN 1 ELSE 0 END) per column.
+-- =============================================================
 
 -- Your query here:
 
 
 
 
--- -------------------------------------------------------------
--- EXERCISE 3   (anti-join pattern)
--- -------------------------------------------------------------
--- Find patients who have NEVER been admitted.
--- Return: PatientID, FirstName, LastName, RegisteredGP.
+-- =============================================================
+-- EXERCISE 3 - CARDINALITY FREQUENCY TABLE
+-- Goal: For the Wards table, return each distinct WardType with
+-- its frequency (how many rows have it) and percentage of the total,
+-- ordered by frequency descending.
+-- Hint: GROUP BY WardType, then COUNT(*) and a percentage column
+--       using a window function: COUNT(*) * 100.0 / SUM(COUNT(*)) OVER ().
+-- =============================================================
 
 -- Your query here:
 
 
 
 
--- -------------------------------------------------------------
--- EXERCISE 4   (multi-table, 3 joins)
--- -------------------------------------------------------------
--- For every observation, return:
---   PatientFullName, WardName, ObsDateTime, ObsType, ObsValue
--- Order by ObsDateTime ascending.
+-- =============================================================
+-- EXERCISE 4 - AGE DISTRIBUTION HISTOGRAM
+-- Goal: Bucket patients into age bands and count how many fall into
+-- each band. Use these bands:
+--   < 40, 40-59, 60-79, 80+
+-- Hint: Use CASE inside both SELECT and GROUP BY (or wrap in a CTE).
+-- =============================================================
 
 -- Your query here:
 
 
 
 
--- -------------------------------------------------------------
--- EXERCISE 5   (mixed INNER + LEFT)
--- -------------------------------------------------------------
--- Return one row per admission with:
---   PatientFullName, WardName, AdmissionDate,
---   FirstObsType, FirstObsValue
--- "First observation" = the earliest ObsDateTime for that admission.
--- Admissions with NO observations should still appear (NULLs allowed).
--- Hint: a subquery or APPLY may help, but it is solvable with joins
--- and a GROUP BY trick. AI-assisted attempts welcome.
+-- =============================================================
+-- EXERCISE 5 - LENGTH OF STAY OUTLIERS (BONUS)
+-- Goal: For admissions that have been discharged, compute the length
+-- of stay in days. Then list any admission whose stay is more than
+-- 2 standard deviations away from the mean.
+-- Hint: Use a CTE with AVG and STDEV, then join back.
+-- Bonus: also return the z-score for each outlier.
+-- =============================================================
 
 -- Your query here:
 
 
 
 
--- -------------------------------------------------------------
--- EXERCISE 6   (BONUS - self join)
--- -------------------------------------------------------------
--- Find pairs of patients who share the same RegisteredGP and
--- the same Postcode prefix (first 3 characters, e.g. 'LS1').
--- Return: PatientA, PatientB, GP, PostcodePrefix.
--- Avoid duplicate pairs (A-B and B-A) and self-pairs (A-A).
+-- =============================================================
+-- EXERCISE 6 - POSTCODE FORMAT CHECK (BONUS)
+-- Goal: List any patient whose Postcode does NOT match the basic
+-- UK pattern of "2-4 letters, space, 1 digit + 2 letters".
+-- Hint: A simple LIKE pattern with [A-Z][A-Z]%[0-9][A-Z][A-Z]
+--       gets you most of the way. Don't worry about perfect coverage.
+-- =============================================================
 
 -- Your query here:
 
 
 
 
--- -------------------------------------------------------------
--- EXERCISE 7   (BONUS - AI prompting practice)
--- -------------------------------------------------------------
--- Without writing the SQL yourself, write the BEST PROMPT you can
--- to get an AI to produce a correct query for this question:
+-- =============================================================
+-- EXERCISE 7 - AI PROMPTING PRACTICE (HOMEWORK)
+-- Goal: Use the five-part template from the deck to write a prompt
+-- that asks AI to generate a profile query for the Observations table.
+-- Your profile should report:
+--   - Total rows
+--   - NULL count for each column
+--   - Distinct ObsType count
+--   - The most common RecordedBy value and its count
 --
--- "Show me each patient who is currently still admitted (no
---  discharge date), the ward they are on, the most recent vital
---  signs observation taken, and how many days they have been in."
---
--- Paste your prompt as a comment below. Discuss in the chat what
--- makes the prompt good or bad. Then test it with Claude or Copilot.
+-- Paste the prompt and the AI's response into the cohort channel.
+-- Then run the AI's query and tell us whether it worked first time
+-- or needed corrections.
+-- =============================================================
 
--- Your prompt:
+-- Your prompt and notes here:
 
 
 
 
 -- =============================================================
 -- END OF EXERCISES
--- Solutions are in 03-solutions.sql  (no peeking until you've tried!)
+-- Solutions are in 03-solutions.sql - have a real go first!
 -- =============================================================
